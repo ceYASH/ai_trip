@@ -1,10 +1,6 @@
-const {
-    GoogleGenerativeAI,
-    HarmCategory,
-    HarmBlockThreshold,
-} = require("@google/generative-ai");
+import {GoogleGenerativeAI} from "@google/generative-ai";
 
-const apiKey = import.meta.env.VITE_GOOGLE_GEMINI_AI_API_KEY;
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({
@@ -14,15 +10,25 @@ const model = genAI.getGenerativeModel({
 const generationConfig = {
     temperature: 1,
     topP: 0.95,
-    topK: 40,
+    topK: 64,
     maxOutputTokens: 8192,
     responseMimeType: "application/json",
 };
 
 export const chatSession = model.startChat({
     generationConfig,
-    history: [],
+    history: [
+        {
+            role: "user",
+            parts: [
+                {text: "Generate Travel Plan for Location: Las Vegas, for 3 Days for Couple with a Cheap budget, Give me a Hotels options list with HotelName, Hotel address, Price, hotel image url, geo coordinates, rating, descriptions and suggest itinerary with placeName, Place Details, Place Image Url, Geo Coordinates, ticket Pricing, rating, Time travel each of the location for 3 days with each day plan with best time to visit in JSON format."},
+            ],
+        },
+        {
+            role: "model",
+            parts: [
+                {text: "```json\n{\n  \"hotelOptions\": [\n    {\n      \"hotelName\": \"The D Las Vegas\",\n      \"hotelAddress\": \"301 Fremont Street, Las Vegas, NV 89101\",\n      \"price\": \"$50 - $100 per night\",\n      \"hotelImageUrl\": \"https://www.thed.com/sites/default/files/styles/hero_image/public/2023-01/D-Hotel-Exterior-Las-Vegas.jpg?itok=y4f6j19e\",\n      \"geoCoordinates\": \"36.1699° N, 115.1422° W\",\n      \"rating\": 4.0,\n      \"description\": \"A budget-friendly hotel located in the heart of Fremont Street, offering a casino, restaurants, and a rooftop pool.\"\n    },\n    {\n      \"hotelName\": \"The Golden Nugget\",\n      \"hotelAddress\": \"129 E Fremont St, Las Vegas, NV 89101\",\n      \"price\": \"$70 - $150 per night\",\n      \"hotelImageUrl\": \"https://www.goldennugget.com/images/hero-images/hero-image-las-vegas-2.jpg\",\n      \"geoCoordinates\": \"36.1694° N, 115.1412° W\",\n      \"rating\": 4.5,\n      \"description\": \"A historic hotel with a casino, restaurants, and a famous shark tank.\"\n    },\n    {\n      \"hotelName\": \"Circus Circus Hotel & Casino\",\n      \"hotelAddress\": \"2880 S Las Vegas Blvd, Las Vegas, NV 89109\",\n      \"price\": \"$40 - $80 per night\",\n      \"hotelImageUrl\": \"https://images.trvl-media.com/hotels/1000000/900000/897000/896772/896772_16_c.jpg\",\n      \"geoCoordinates\": \"36.0997° N, 115.1716° W\",\n      \"rating\": 3.5,\n      \"description\": \"A family-friendly hotel with a circus theme, a casino, and a variety of dining options.\"\n    }\n  ],\n  \"itinerary\": [\n    {\n      \"day\": \"Day 1\",\n      \"activities\": [\n        {\n          \"placeName\": \"Fremont Street Experience\",\n          \"placeDetails\": \"A pedestrian mall with a canopy of lights, live entertainment, and street performers.\",\n          \"placeImageUrl\": \"https://www.fremontstreetexperience.com/images/home/hero.jpg\",\n          \"geoCoordinates\": \"36.1699° N, 115.1422° W\",\n          \"ticketPricing\": \"Free\",\n          \"rating\": 4.5,\n          \"timeToVisit\": \"Evening\"\n        },\n        {\n          \"placeName\": \"Golden Nugget Casino\",\n          \"placeDetails\": \"A historic casino with a famous shark tank.\",\n          \"placeImageUrl\": \"https://www.goldennugget.com/images/hero-images/hero-image-las-vegas-2.jpg\",\n          \"geoCoordinates\": \"36.1694° N, 115.1412° W\",\n          \"ticketPricing\": \"Free\",\n          \"rating\": 4.0,\n          \"timeToVisit\": \"Evening\"\n        }\n      ]\n    },\n    {\n      \"day\": \"Day 2\",\n      \"activities\": [\n        {\n          \"placeName\": \"The Strip\",\n          \"placeDetails\": \"A world-famous boulevard with casinos, hotels, and entertainment.\",\n          \"placeImageUrl\": \"https://www.visitlasvegas.com/sites/default/files/styles/hero_image/public/2022-08/Strip-Night-Hero.jpg\",\n          \"geoCoordinates\": \"36.1152° N, 115.1744° W\",\n          \"ticketPricing\": \"Free\",\n          \"rating\": 5.0,\n          \"timeToVisit\": \"Afternoon\"\n        },\n        {\n          \"placeName\": \"Bellagio Fountains\",\n          \"placeDetails\": \"A stunning water and light show in front of the Bellagio Hotel.\",\n          \"placeImageUrl\": \"https://www.bellagio.com/content/dam/bellagio/images/hero/fountains-night-hero.jpg\",\n          \"geoCoordinates\": \"36.1145° N, 115.1724° W\",\n          \"ticketPricing\": \"Free\",\n          \"rating\": 4.5,\n          \"timeToVisit\": \"Evening\"\n        }\n      ]\n    },\n    {\n      \"day\": \"Day 3\",\n      \"activities\": [\n        {\n          \"placeName\": \"Hoover Dam\",\n          \"placeDetails\": \"A historic dam on the Colorado River, a short drive from Las Vegas.\",\n          \"placeImageUrl\": \"https://www.nps.gov/articles/media/photo/hoover_dam_003_1000.jpg\",\n          \"geoCoordinates\": \"36.0049° N, 114.9720° W\",\n          \"ticketPricing\": \"$30 per person\",\n          \"rating\": 4.0,\n          \"timeToVisit\": \"Morning\"\n        },\n        {\n          \"placeName\": \"Red Rock Canyon National Conservation Area\",\n          \"placeDetails\": \"A scenic desert park with hiking trails and rock formations.\",\n          \"placeImageUrl\": \"https://www.redrockcanyonlv.org/sites/default/files/styles/hero/public/2023-02/RedRock_Hero_Photo.jpg\",\n          \"geoCoordinates\": \"36.1838° N, 115.3249° W\",\n          \"ticketPricing\": \"$15 per vehicle\",\n          \"rating\": 4.5,\n          \"timeToVisit\": \"Afternoon\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n**Hotel Options:**\n\nThis list provides three affordable hotel options in Las Vegas:\n\n* **The D Las Vegas:** Located on Fremont Street, this hotel offers a good value for money with a casino and a rooftop pool.\n* **The Golden Nugget:** Another popular choice on Fremont Street, this historic hotel features a casino, restaurants, and a famous shark tank.\n* **Circus Circus Hotel & Casino:** A family-friendly option on the Strip, Circus Circus provides a circus theme, casino, and dining options.\n\n**Itinerary:**\n\nThis itinerary is designed for a budget-conscious couple visiting Las Vegas for three days:\n\n* **Day 1:** Start with the vibrant Fremont Street Experience in the evening, then explore the Golden Nugget Casino.\n* **Day 2:** Visit the bustling The Strip in the afternoon, followed by a mesmerizing performance of the Bellagio Fountains in the evening.\n* **Day 3:** Take a scenic drive to the iconic Hoover Dam in the morning, and spend the afternoon exploring the Red Rock Canyon National Conservation Area.\n\n**Places of Interest:**\n\n* **Fremont Street Experience:** A pedestrian mall with a canopy of lights, live entertainment, and street performers.\n* **Golden Nugget Casino:** A historic casino with a famous shark tank.\n* **The Strip:** A world-famous boulevard with casinos, hotels, and entertainment.\n* **Bellagio Fountains:** A stunning water and light show in front of the Bellagio Hotel.\n* **Hoover Dam:** A historic dam on the Colorado River.\n* **Red Rock Canyon National Conservation Area:** A scenic desert park with hiking trails and rock formations.\n\n**Budget-Friendly Tips:**\n\n* **Stay in a budget-friendly hotel:** Consider hotels on Fremont Street or off the Strip.\n* **Eat at affordable restaurants:** Look for deals and specials, and opt for buffets for a lower cost.\n* **Take advantage of free attractions:** Many attractions, such as the Bellagio Fountains and the Strip itself, are free.\n* **Use public transportation:** The Las Vegas Monorail and local buses offer affordable transportation options.\n* **Plan ahead:** Booking activities and transportation in advance can often save you money.\n\nRemember to adjust this itinerary to fit your interests and preferences. You can also explore additional attractions in Las Vegas, such as the High Roller observation wheel, the Neon Museum, and the Las Vegas Arts District.\n"},
+            ],
+        },
+    ],
 });
-
-// const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
-// console.log(result.response.text());
